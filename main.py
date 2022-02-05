@@ -12,8 +12,9 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def Register():
     name,email,password,is_resto=dict(request.json).values()
     #name check
+    print(dict(request.json).values())
     data=dict(request.json)
-    if is_resto=='True':
+    if is_resto==True:
         restaurants=[]
         with open("./JSON/restaurants.json","r") as fp:
             if os.stat("./JSON/restaurants.json").st_size != 0:
@@ -21,7 +22,7 @@ def Register():
             if len(restaurants)!=0:
                 for i in restaurants:
                     if i['email']==str(email):
-                        return "email already existed"
+                        return jsonify( "email already existed")
             data['id']=str(uuid.uuid4())
             data['items']=[]
             restaurants.append(data)
@@ -34,21 +35,20 @@ def Register():
                 users=json.load(fp)
             if len(users)!=0:
                 for i in users:
-                    
                     if i['email']==email:
                         return "email already existed"
             data['id']=str(uuid.uuid4())
             users.append(data)
         with open("./JSON/users.json","w") as fp:
             json.dump(users,fp)
-    return "hello"
+    return jsonify(data)
 
 
 @app.route('/signin', methods=['POST'])
 def Signin():
     email,password,is_resto=dict(request.json).values()
     out=None
-    if is_resto=='True':
+    if is_resto==True:
         restaurants=[]
         with open("./JSON/restaurants.json","r") as fp:
             if os.stat("./JSON/restaurants.json").st_size != 0:
@@ -59,11 +59,11 @@ def Signin():
                         out=i
                         break
                 if out==None:
-                    return "invalid login"
+                    return jsonify ("invalid login")
                 else:
-                    return "successfully signed in"
+                    return out
             else:
-                return "please register yourself"
+                return jsonify("please register yourself")
     else:
         users=[]
         with open("./JSON/users.json","r") as fp:
@@ -75,11 +75,11 @@ def Signin():
                         out=i
                         break
                 if out==None:
-                    return "invalid login"
+                    return jsonify("invalid login")
                 else:
-                    return "successfully signed in"
+                    return out
             else:
-                return "please register yourself"
+                return jsonify("please register yourself")
 @app.route('/restaurants', methods=['GET'])
 def getRestro():
     restaurants=[]
@@ -90,18 +90,22 @@ def getRestro():
 @app.route('/additems', methods=['POST'])
 def addItems():
     #name check
-    restoId,name,cost=dict(request.json).values()
+    name,cost,restoId=dict(request.json).values()
     restaurants=[]
+    print(dict(request.json).values())
     with open("./JSON/restaurants.json","r") as fp:
         if os.stat("./JSON/restaurants.json").st_size != 0:
             restaurants=json.load(fp)
     for i in restaurants:
+        print(restoId,i['id'])
         if i['id']==restoId:
+            print("yes")
             id=str(uuid.uuid4())
             i['items'].append({"id":id,"name":name,"cost":cost})
+
     with open("./JSON/restaurants.json","w") as fp:
             json.dump(restaurants,fp)
-    return "hello"
+    return jsonify("order successfully added")
 
 @app.route('/getitems', methods=['GET'])
 def getItems():
@@ -113,7 +117,6 @@ def getItems():
     for i in restaurants:
         if i['id']==restoId:
             return jsonify( i['items'])
-    return ""
 
 
 @app.route('/orderitems', methods=['POST'])
