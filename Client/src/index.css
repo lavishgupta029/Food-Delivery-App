@@ -1,0 +1,138 @@
+* {
+  font-family: "quicksand", Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+body {
+  background: #ccccff;
+}
+.container {
+  display: flex;
+  justify-content: space-around;
+}
+.Signup__formModal {
+  width: 450px;
+  height: 515px;
+  margin-top: 2em;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+
+.formModal {
+  width: 450px;
+  height: 425px;
+  margin-top: 2em;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+.orders__formModal {
+  width: 450px;
+  height: 400px;
+  margin-top: 4em;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+.button1 {
+  cursor: pointer;
+  z-index: 2;
+  outline: none;
+  background: rgb(55, 31, 158);
+  color: white;
+  border-radius: 10px;
+  border: none;
+  font-size: 1.2em;
+  padding: 0.8em 1em 0.8em 1em;
+  transition: 0.5s;
+  width: 50%;
+  margin-top: 1em;
+  margin-left: 25%;
+}
+
+.dropdown {
+  width: 100%;
+  outline: none;
+}
+
+.button1:hover {
+  background: rgb(96, 13, 219);
+}
+
+.form {
+  width: 90%;
+  padding-bottom: 1em;
+  padding-top: 1.3em;
+  margin-left: 1.5em;
+}
+
+.formInput {
+  width: 100%;
+  font-size: 1em;
+  padding: 1.2em 1.7em 1.2em 1.7em;
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+
+.option {
+  font-size: 1.2em;
+}
+
+::placeholder {
+  opacity: 0.5;
+}
+
+.secDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.button2 {
+  margin-left: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: blue;
+  height: 20px;
+  margin-top: 16px;
+  font-weight: bold;
+}
+.logo {
+  border: none;
+  width: 20rem;
+  height: 20rem;
+}
+.dishes__header {
+  text-align: center;
+  margin-block-end: 0em;
+  padding-top: 0.5em;
+}
+
+.orders__list {
+  margin-top: 4em;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  flex: 0.55;
+  flex-wrap: wrap;
+}
+.orders__item {
+  padding: 7px 30px 7px 30px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+@media only screen and (max-width: 500px) {
+  .formModal {
+    width: 100%;
+  }
+}

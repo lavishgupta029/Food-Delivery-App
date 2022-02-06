@@ -22,7 +22,7 @@ def Register():
             if len(restaurants)!=0:
                 for i in restaurants:
                     if i['email']==str(email):
-                        return jsonify( "email already existed")
+                        return jsonify( {"error":"email already existed"})
             data['id']=str(uuid.uuid4())
             data['items']=[]
             restaurants.append(data)
@@ -36,7 +36,7 @@ def Register():
             if len(users)!=0:
                 for i in users:
                     if i['email']==email:
-                        return "email already existed"
+                        return jsonify( {"error":"email already existed"})
             data['id']=str(uuid.uuid4())
             users.append(data)
         with open("./JSON/users.json","w") as fp:
@@ -59,11 +59,11 @@ def Signin():
                         out=i
                         break
                 if out==None:
-                    return jsonify ("invalid login")
+                    return jsonify({"error":"Invalid Login"})
                 else:
                     return out
             else:
-                return jsonify("please register yourself")
+                return jsonify({"error":"please register yourself"})
     else:
         users=[]
         with open("./JSON/users.json","r") as fp:
@@ -92,20 +92,20 @@ def addItems():
     #name check
     name,cost,restoId=dict(request.json).values()
     restaurants=[]
-    print(dict(request.json).values())
+    result=[]
     with open("./JSON/restaurants.json","r") as fp:
         if os.stat("./JSON/restaurants.json").st_size != 0:
             restaurants=json.load(fp)
     for i in restaurants:
-        print(restoId,i['id'])
         if i['id']==restoId:
-            print("yes")
+            print(i['id'],restoId)
             id=str(uuid.uuid4())
             i['items'].append({"id":id,"name":name,"cost":cost})
-
+            result=i['items']
+            break
     with open("./JSON/restaurants.json","w") as fp:
             json.dump(restaurants,fp)
-    return jsonify("order successfully added")
+    return jsonify(result)
 
 @app.route('/getitems', methods=['GET'])
 def getItems():
@@ -116,7 +116,9 @@ def getItems():
             restaurants=json.load(fp)
     for i in restaurants:
         if i['id']==restoId:
+            print("yes")
             return jsonify( i['items'])
+    return jsonify({"error":"restaurant not found"})
 
 
 @app.route('/orderitems', methods=['POST'])
