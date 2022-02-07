@@ -33,6 +33,7 @@ function Menu() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    //Fetching All Restaurants -> GET Method
     return fetch(`http://127.0.0.1:5000/restaurants`, {
       method: "GET",
     })
@@ -68,6 +69,7 @@ function Menu() {
     showSuccess("Item Removed from Cart");
   };
   const PlaceOrder = (order) => {
+    //Order Items Route -> POST Method
     return fetch(`http://127.0.0.1:5000/orderitems`, {
       method: "POST",
       headers: {

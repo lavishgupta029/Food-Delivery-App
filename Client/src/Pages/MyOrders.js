@@ -6,6 +6,7 @@ function MyOrders() {
   const { id } = isAuthenticate();
   const [orders, setOrders] = useState([]);
   useEffect(() => {
+    // Fetching Orders By Id -> GET Method
     return fetch(`http://127.0.0.1:5000/getorders?userId=${id}`, {
       method: "GET",
     })

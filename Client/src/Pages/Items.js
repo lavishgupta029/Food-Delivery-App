@@ -18,6 +18,7 @@ function Items() {
     setValues({ ...values, [name]: event.target.value });
   };
   useEffect(() => {
+    // Fetching All Items -> GET Method
     return fetch(`http://127.0.0.1:5000/getitems?restoId=${id}`, {
       method: "GET",
     })
@@ -32,6 +33,7 @@ function Items() {
       });
   }, []);
   const Orders = (order) => {
+    // Order Items Route -> POST Method
     return fetch(`http://127.0.0.1:5000/additems`, {
       method: "POST",
       headers: {

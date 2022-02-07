@@ -4,11 +4,13 @@ import json
 import uuid
 import os
 import re
-
+# Creating Flask App 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
+# Registration Route -> POST Method
 @app.route('/register', methods=['POST'])
 def Register():
     name,email,password,is_resto=dict(request.json).values()
@@ -19,6 +21,7 @@ def Register():
         return jsonify( {"error":"Please Enter Valid Email Address"})
 
     data=dict(request.json)
+    # Checking if User is Owner or Not
     if is_resto=='true':
         restaurants=[]
         with open("./JSON/restaurants.json","r") as fp:
@@ -57,11 +60,12 @@ def Register():
             json.dump(users,fp)
     return jsonify(data)
 
-
+# Signin Route -> POST Method
 @app.route('/signin', methods=['POST'])
 def Signin():
     email,password,is_resto=dict(request.json).values()
     out=None
+     # Checking if User is Owner or Not
     if is_resto=='true':
         restaurants=[]
         with open("./JSON/restaurants.json","r") as fp:
@@ -95,7 +99,7 @@ def Signin():
             else:
                 return jsonify({"error":"please register yourself"})
 
-
+# Fetching All Restaurants -> GET Method
 @app.route('/restaurants', methods=['GET'])
 def getRestro():
     restaurants=[]
@@ -104,7 +108,7 @@ def getRestro():
             restaurants=json.load(fp)
     return  jsonify(restaurants)
 
-
+# Add Items Route -> POST Method
 @app.route('/additems', methods=['POST'])
 def addItems():
     name,cost,restoId=dict(request.json).values()
@@ -129,6 +133,7 @@ def addItems():
             json.dump(restaurants,fp)
     return jsonify(result)
 
+# Fetching All Items -> GET Method
 @app.route('/getitems', methods=['GET'])
 def getItems():
     restoId=request.args.get('restoId')
@@ -141,7 +146,7 @@ def getItems():
             return jsonify( i['items'])
     return jsonify({"error":"restaurant not found"})
 
-
+# Order Items Route -> POST Method
 @app.route('/orderitems', methods=['POST'])
 def orderItems():
     userId,items,totalCost,createdAt=dict(request.json).values()
@@ -155,7 +160,7 @@ def orderItems():
             json.dump(orders,fp)
     return jsonify("order successfully placed")
 
-
+#Fetching Orders By Id -> GET Method
 @app.route('/getorders', methods=['GET'])
 def getOrders():
     userId=request.args.get('userId')
@@ -169,6 +174,7 @@ def getOrders():
             myOrders.append(i)
     return jsonify(sorted(myOrders, key=lambda k: k['createdAt'],reverse=True))
 
+#Deleting Items By Id -> Patch Method
 @app.route('/deleteitem', methods=['PATCH'])
 def deleteItem():
     restoId,itemId=dict(request.json).values()
@@ -186,6 +192,6 @@ def deleteItem():
     return jsonify(resto_items)
 
 
-
+# Initializing Server
 if __name__ == "__main__":
    app.run(debug=True)

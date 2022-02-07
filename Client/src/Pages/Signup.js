@@ -20,6 +20,7 @@ function Signup() {
   const navigate = useNavigate();
 
   const Signupuser = (user) => {
+    // Signup Route
     return fetch(`http://127.0.0.1:5000/register`, {
       method: "POST",
       headers: {
