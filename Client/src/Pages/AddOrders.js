@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { isAuthenticate } from "../auth/token";
+import { isAuthenticate, signout } from "../auth/token";
+import { showError, showSuccess } from "../utils";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { NavLink } from "react-router-dom";
+import { Box } from "@mui/system";
 
 function AddOrders() {
   const { id } = isAuthenticate();
   const [values, setValues] = useState({
     name: "",
     cost: "",
-    restoId: id,
   });
   const [tempItems, setTempItems] = useState([]);
-  const { name, cost, restoId } = values;
+  const { name, cost } = values;
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
@@ -45,13 +49,49 @@ function AddOrders() {
   };
   const clickSubmit = (event) => {
     event.preventDefault();
-    Orders({ name, cost, restoId }).then((data) => {
-      setTempItems([...data]);
+    Orders({ name, cost, restoId: id }).then((data) => {
+      if (data?.error) {
+        showError(data.error);
+      } else {
+        showSuccess("Dish Successfully Added");
+        setValues({ name: "", cost: "" });
+        setTempItems([...data]);
+      }
     });
+  };
+
+  const deleteItem = (item) => {
+    const order = {
+      restoId: id,
+      itemId: item.id,
+    };
+    return fetch(`http://127.0.0.1:5000/deleteitem`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(order),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setTempItems([...data]);
+        showSuccess("Item Successfully Deleted");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <NavLink className="resto__button" onClick={() => signout()} to="/">
+          Logout
+        </NavLink>
+      </div>
       <div className="container">
         <div className="orders__formModal">
           <h1 className="dishes__header">Add Your Dishes</h1>
@@ -75,20 +115,39 @@ function AddOrders() {
             </button>
           </form>
         </div>
-        <div className="orders__list">
-          {tempItems.map((item) => (
-            <div
-              data-aos="flip-left"
-              data-aos-easing="ease-out-cubic"
-              data-aos-duration="2000"
-              className="orders__item"
-            >
-              <h2>Name: {item.name}</h2>
-              <p>Cost: {item.cost}</p>
-            </div>
-          ))}
-        </div>
+        <Box display="flex" alignItems="flex-start" justifyContent="center">
+          <table className="order__table">
+            {tempItems.length > 0 ? (
+              <tr>
+                <th>Dish Name</th>
+                <th>Dish Cost</th>
+                <th>Actions</th>
+              </tr>
+            ) : (
+              ""
+            )}
+            {tempItems.length > 0
+              ? tempItems.map((item) => (
+                  <tr>
+                    <td>{item.name}</td>
+                    <td>{item.cost}</td>
+                    <td>
+                      <button
+                        className="order__delete"
+                        onClick={() => {
+                          deleteItem(item);
+                        }}
+                      >
+                        DELETE
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              : ""}
+          </table>
+        </Box>
       </div>
+      <ToastContainer />
     </>
   );
 }

@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { authenticate } from "../auth/token";
+import { ToastContainer } from "react-toastify";
+import { showError, showSuccess } from "../utils";
+import "react-toastify/dist/ReactToastify.css";
 
 function Signup() {
   const [values, setValues] = useState({
     name: "",
     email: "",
     password: "",
-    is_resto: true,
+    is_resto: "true",
   });
   const { name, email, password, is_resto } = values;
   const handleChange = (name) => (event) => {
@@ -33,8 +37,23 @@ function Signup() {
   };
   const clickSubmit = (event) => {
     event.preventDefault();
+
     Signupuser({ name, email, password, is_resto }).then((data) => {
-      console.log(data);
+      if (data?.error) {
+        showError(data.error);
+      } else {
+        authenticate(data);
+        showSuccess(
+          "Succesfully signed up,you will be redirected to your Details"
+        );
+        setTimeout(function () {
+          if (data.is_resto === "true") {
+            navigate("/AddOrders");
+          } else {
+            navigate("/Orders");
+          }
+        }, 2500);
+      }
     });
   };
 
@@ -48,7 +67,7 @@ function Signup() {
               onChange={handleChange("is_resto")}
               className="formInput"
             >
-              <option value={true} value="owner" className="option">
+              <option value={true} className="option">
                 Owner
               </option>
               <option value={false} className="option">
@@ -57,7 +76,7 @@ function Signup() {
             </select>
             <input
               type="email"
-              placeholder="Enter email "
+              placeholder="Enter Email "
               className="formInput"
               value={email}
               onChange={handleChange("email")}
@@ -65,13 +84,15 @@ function Signup() {
             <input
               type="text"
               className="formInput"
-              placeholder="Enter name "
+              placeholder={
+                is_resto == "true" ? "Enter Resto Name" : "Enter Name"
+              }
               value={name}
               onChange={handleChange("name")}
             />
             <input
               type="password"
-              placeholder="Enter password"
+              placeholder="Enter Password"
               className="formInput"
               value={password}
               onChange={handleChange("password")}
@@ -98,6 +119,7 @@ function Signup() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

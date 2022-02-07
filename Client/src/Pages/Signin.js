@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authenticate } from "../auth/token";
+import { showError, showSuccess } from "../utils";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Signin() {
   const [values, setValues] = useState({
     email: "",
     password: "",
-    is_resto: true,
+    is_resto: "true",
   });
   const { email, password, is_resto } = values;
   const handleChange = (name) => (event) => {
@@ -34,8 +37,21 @@ function Signin() {
   const clickSubmit = (event) => {
     event.preventDefault();
     Signinuser({ email, password, is_resto }).then((data) => {
-      console.log(data.error);
-      authenticate(data);
+      if (data?.error) {
+        showError(data.error);
+      } else {
+        authenticate(data);
+        showSuccess(
+          "Succesfully signed up,you will be redirected to your Details"
+        );
+        setTimeout(function () {
+          if (data.is_resto === "true") {
+            navigate("/AddOrders");
+          } else {
+            navigate("/Orders");
+          }
+        }, 2500);
+      }
     });
   };
 
@@ -58,14 +74,14 @@ function Signin() {
             </select>
             <input
               type="email"
-              placeholder="Enter email "
+              placeholder="Enter Email "
               className="formInput"
               value={email}
               onChange={handleChange("email")}
             />
             <input
               type="password"
-              placeholder="Enter password"
+              placeholder="Enter Password"
               className="formInput"
               value={password}
               onChange={handleChange("password")}
@@ -92,6 +108,7 @@ function Signin() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
