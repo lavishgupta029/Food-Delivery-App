@@ -22,7 +22,7 @@ const style = {
   height: 450,
 };
 
-function Orders() {
+function Menu() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -226,4 +226,4 @@ function Orders() {
   );
 }
 
-export default Orders;
+export default Menu;

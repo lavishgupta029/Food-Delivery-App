@@ -13,7 +13,6 @@ function MyOrders() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setOrders([...data]);
       })
       .catch((error) => {
@@ -40,15 +39,15 @@ function MyOrders() {
           )}
 
           {orders.length > 0 ? (
-            orders.map((order) => (
-              <tr>
+            orders.map((order, index) => (
+              <tr key={index}>
                 <td>{order.createdAt.substring(0, 16)}</td>
                 <td>
                   <table className="myOrders__itemRow">
                     <tr>
                       {order.items.length > 0
-                        ? order.items.map((item) => (
-                            <tr>
+                        ? order.items.map((item, index) => (
+                            <tr key={index}>
                               <td style={{ paddingRight: "3em" }}>
                                 {item.name}
                               </td>

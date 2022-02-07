@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { NavLink } from "react-router-dom";
 import { Box } from "@mui/system";
 
-function AddOrders() {
+function Items() {
   const { id } = isAuthenticate();
   const [values, setValues] = useState({
     name: "",
@@ -127,8 +127,8 @@ function AddOrders() {
               ""
             )}
             {tempItems.length > 0
-              ? tempItems.map((item) => (
-                  <tr>
+              ? tempItems.map((item, index) => (
+                  <tr key={index}>
                     <td>{item.name}</td>
                     <td>{item.cost}</td>
                     <td>
@@ -152,4 +152,4 @@ function AddOrders() {
   );
 }
 
-export default AddOrders;
+export default Items;

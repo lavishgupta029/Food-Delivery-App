@@ -48,9 +48,9 @@ function Signup() {
         );
         setTimeout(function () {
           if (data.is_resto === "true") {
-            navigate("/AddOrders");
+            navigate("/Items");
           } else {
-            navigate("/Orders");
+            navigate("/Menu");
           }
         }, 2500);
       }
